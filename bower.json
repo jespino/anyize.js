@@ -1,0 +1,20 @@
+{
+  "name": "anyize.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jespino/anyize.js",
+  "authors": [
+    "Jesús Espino García <jespinog@gmail.com>"
+  ],
+  "description": "Easy create raptorize style animations",
+  "main": "dist/anyize.js",
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components",
+    "src/",
+    "test",
+    "tests"
+  ]
+}
