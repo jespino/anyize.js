@@ -20,9 +20,11 @@
     };
 
     function Anyize(options) {
+      this.raptorizeAnimation = __bind(this.raptorizeAnimation, this);
       this.crossScreenAnimation = __bind(this.crossScreenAnimation, this);
       this.defaultAnimation = __bind(this.defaultAnimation, this);
       var anyizeAudioMarkup, anyizeImageMarkup;
+      this.locked = false;
       this._randomId = this._randomString(5);
       this.imgUrl = options.imgUrl || null;
       this.mp3Url = options.mp3Url || null;
@@ -62,6 +64,7 @@
     };
 
     Anyize.prototype.fire = function() {
+      this.locked = true;
       return this.animation($("#" + this._randomId + "-image"), $("#" + this._randomId + "-audio"));
     };
 
@@ -76,6 +79,8 @@
           return imgElement.delay(1500).animate({
             "bottom": -imgElement.height() - 10
           }, 750, function() {
+            var locked;
+            locked = false;
             return _this.reset(imgElement, audioElement);
           });
         };
@@ -90,6 +95,8 @@
         "right": $(window).width()
       }, 5000, (function(_this) {
         return function() {
+          var locked;
+          locked = false;
           return _this.reset(imgElement, audioElement);
         };
       })(this));
@@ -110,6 +117,29 @@
       })(this);
       setCss();
       return $("#" + this._randomId + "-image").on("load", setCss);
+    };
+
+    Anyize.prototype.raptorizeAnimation = function(imgElement, audioElement) {
+      audioElement.each(function(idx, elem) {
+        return elem.play();
+      });
+      return imgElement.animate({
+        "bottom": "0"
+      }, (function(_this) {
+        return function() {
+          return imgElement.animate({
+            "bottom": "-100px"
+          }, 100, function() {
+            return imgElement.delay(300).animate({
+              "right": $(window).width()
+            }, 2200, function() {
+              var locked;
+              locked = false;
+              return _this.reset(imgElement, audioElement);
+            });
+          });
+        };
+      })(this));
     };
 
     return Anyize;

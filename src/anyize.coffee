@@ -4,6 +4,7 @@ class Anyize
         return (chars[Math.floor(Math.random() * chars.length)] for x in [1..length]).join('')
 
     constructor: (options) ->
+        @locked = false
         @_randomId = @_randomString(5)
         @imgUrl = options.imgUrl or null
         @mp3Url = options.mp3Url or null
@@ -38,17 +39,20 @@ class Anyize
         imgElement.css(@initialCss)
 
     fire: ->
+        @locked = true
         @animation($("##{@_randomId}-image"), $("##{@_randomId}-audio"))
 
     defaultAnimation: (imgElement, audioElement) =>
         audioElement.each (idx, elem) -> elem.play()
         imgElement.animate { "bottom" : "0" }, 750, =>
             imgElement.delay(1500).animate { "bottom" : -imgElement.height() - 10 }, 750, =>
+                locked = false
                 @reset(imgElement, audioElement)
 
     crossScreenAnimation: (imgElement, audioElement) =>
         audioElement.each (idx, elem) -> elem.play()
         imgElement.animate { "right" : $(window).width() }, 5000, =>
+            locked = false
             @reset(imgElement, audioElement)
 
     setCrossScreenCss: ->
@@ -63,5 +67,13 @@ class Anyize
 
         setCss()
         $("##{@_randomId}-image").on "load", setCss
+
+    raptorizeAnimation: (imgElement, audioElement) =>
+        audioElement.each (idx, elem) -> elem.play()
+        imgElement.animate {"bottom" : "0"}, =>
+            imgElement.animate {"bottom" : "-100px"}, 100, =>
+                imgElement.delay(300).animate {"right": $(window).width()}, 2200, =>
+                    locked = false
+                    @reset(imgElement, audioElement)
 
 @Anyize = Anyize
