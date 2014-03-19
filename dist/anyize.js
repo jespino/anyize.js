@@ -46,7 +46,6 @@
       }
       $("#" + this._randomId + "-image").on('load', (function(_this) {
         return function() {
-          console.log($("#" + _this._randomId + "-image").height() - 10);
           _this.initialCss = options.initialCss || {
             "position": "fixed",
             "bottom": -$("#" + _this._randomId + "-image").height() - 10,
