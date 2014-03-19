@@ -1,6 +1,6 @@
 {
   "name": "anyize.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Easy create raptorize style animations",
   "main": "dist/anyize.js",
   "scripts": {
