@@ -46,15 +46,19 @@
         anyizeAudioMarkup += "</audio>";
         $('body').append(anyizeAudioMarkup);
       }
-      $("#" + this._randomId + "-image").on('load', (function(_this) {
+      this.initialCss = options.initialCss || (function(_this) {
         return function() {
-          _this.initialCss = options.initialCss || {
+          return {
             "position": "fixed",
             "bottom": -$("#" + _this._randomId + "-image").height() - 10,
             "right": "0",
             "display": "block"
           };
-          return $("#" + _this._randomId + "-image").css(_this.initialCss);
+        };
+      })(this);
+      $("#" + this._randomId + "-image").on('load', (function(_this) {
+        return function() {
+          return $("#" + _this._randomId + "-image").css(_this.initialCss());
         };
       })(this));
     }
@@ -64,66 +68,70 @@
     };
 
     Anyize.prototype.fire = function() {
+      var audioElement, imgElement;
+      imgElement = $("#" + this._randomId + "-image");
+      audioElement = $("#" + this._randomId + "-audio");
       this.locked = true;
-      return this.animation($("#" + this._randomId + "-image"), $("#" + this._randomId + "-audio"));
+      return this.animation(imgElement, audioElement).then((function(_this) {
+        return function() {
+          _this.locked = false;
+          return _this.reset(imgElement, audioElement);
+        };
+      })(this));
     };
 
     Anyize.prototype.defaultAnimation = function(imgElement, audioElement) {
+      var defer;
+      defer = $.Deferred();
       audioElement.each(function(idx, elem) {
         return elem.play();
       });
-      return imgElement.animate({
+      imgElement.animate({
         "bottom": "0"
       }, 750, (function(_this) {
         return function() {
           return imgElement.delay(1500).animate({
             "bottom": -imgElement.height() - 10
           }, 750, function() {
-            var locked;
-            locked = false;
-            return _this.reset(imgElement, audioElement);
+            return defer.resolve();
           });
         };
       })(this));
+      return defer.promise();
     };
 
     Anyize.prototype.crossScreenAnimation = function(imgElement, audioElement) {
+      var defer;
+      defer = $.Deferred();
       audioElement.each(function(idx, elem) {
         return elem.play();
       });
-      return imgElement.animate({
+      imgElement.animate({
         "right": $(window).width()
       }, 5000, (function(_this) {
         return function() {
-          var locked;
-          locked = false;
-          return _this.reset(imgElement, audioElement);
+          return defer.resolve();
         };
       })(this));
+      return defer.promise();
     };
 
-    Anyize.prototype.setCrossScreenCss = function() {
-      var setCss;
-      setCss = (function(_this) {
-        return function() {
-          _this.initialCss = {
-            "position": "fixed",
-            "bottom": "0",
-            "right": -$("#" + _this._randomId + "-image").height() - 10,
-            "display": "block"
-          };
-          return $("#" + _this._randomId + "-image").css(_this.initialCss);
-        };
-      })(this);
-      setCss();
-      return $("#" + this._randomId + "-image").on("load", setCss);
+    Anyize.prototype.crossScreenCss = function() {
+      return this.initialCss = {
+        "position": "fixed",
+        "bottom": "0",
+        "right": -$("#" + this._randomId + "-image").height() - 10,
+        "display": "block"
+      };
     };
 
     Anyize.prototype.raptorizeAnimation = function(imgElement, audioElement) {
+      var defer;
+      defer = $.Deferred();
       audioElement.each(function(idx, elem) {
         return elem.play();
       });
-      return imgElement.animate({
+      imgElement.animate({
         "bottom": "0"
       }, (function(_this) {
         return function() {
@@ -133,13 +141,12 @@
             return imgElement.delay(300).animate({
               "right": $(window).width()
             }, 2200, function() {
-              var locked;
-              locked = false;
-              return _this.reset(imgElement, audioElement);
+              return defer.resolve();
             });
           });
         };
       })(this));
+      return defer.promise();
     };
 
     return Anyize;
